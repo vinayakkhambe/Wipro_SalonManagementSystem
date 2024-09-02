@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.dto.LoginDto;
 import com.app.dto.UserDto;
 import com.app.dto.UserDto2;
 import com.app.entity.User;
@@ -35,11 +36,24 @@ public class UserController {
 		return "success test";
 	}
 	
+	@PostMapping("/verify")
+	public UserDto validUser(@RequestBody LoginDto dto)
+	{
+		return uservice.validUser(dto.getEmail(), dto.getPassword());
+	}
+	
 	@GetMapping("/get/id/{id}")
 //	@PreAuthorize("hasRole('ADMIN')")
 	public UserDto getuserById(@PathVariable long id)
 	{
 		UserDto dto = uservice.getUserByid(id);
+		return dto;
+	}
+	
+	@GetMapping("/get/email/{email}")
+	public UserDto getuserByEmail(@PathVariable String email)
+	{
+		UserDto dto = uservice.getUserByEmail(email);
 		return dto;
 	}
 	

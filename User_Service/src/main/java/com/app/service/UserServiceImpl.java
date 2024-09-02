@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,31 @@ import com.app.repository.UserRepository;
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
+    private PasswordEncoder passwordEncoder;
+	
+	@Autowired
 	UserRepository urepo;
 	
 	@Autowired
 	ModelMapper mapper;
+	
+	public UserDto validUser(String email ,String password)
+	{
+		User u = urepo.findByEmail(email).get();
+		
+//		if(u.getPassword().equals(password))
+//		{
+//			return mapper.map(u, UserDto.class);
+//		}
+		if(passwordEncoder.matches(password, u.getPassword()))
+		{
+			return mapper.map(u, UserDto.class);
+		}
+		else
+		{
+			throw new IllegalArgumentException("Invalid password.");
+		}
+	}
 	
 	//GetByID
 	public UserDto getUserByid(long id)
@@ -32,6 +55,15 @@ public class UserServiceImpl implements UserService {
 		UserDto dto = mapper.map(u, UserDto.class);
 		return dto;
 	}
+	
+	//GetByEmail
+	@Override
+	public UserDto getUserByEmail(String email) {
+		User u  =urepo.findByEmail(email).orElseThrow(() -> new RuntimeException("Not user present with email"+email));
+		UserDto dto = mapper.map(u, UserDto.class);
+		return dto;
+	}
+
 
 	//GetALL
 	@Override
@@ -48,10 +80,10 @@ public class UserServiceImpl implements UserService {
 //		{
 //			return 
 //		}
-//		BCryptPasswordEncoder bCryptPasswordEncoder= new BCryptPasswordEncoder();
-//		String encodedPassword = bCryptPasswordEncoder.encode(dto.getPassword());
+		BCryptPasswordEncoder bCryptPasswordEncoder= new BCryptPasswordEncoder();
+		String encodedPassword = bCryptPasswordEncoder.encode(dto.getPassword());
 		User u = mapper.map(dto, User.class);
-//		u.setPassword(encodedPassword);
+		u.setPassword(encodedPassword);
 		User saveduder = urepo.save(u);
 		return mapper.map(saveduder, UserDto.class);
        
@@ -90,6 +122,7 @@ public class UserServiceImpl implements UserService {
 	  urepo.deleteById(id);
 		return mapper.map(u, UserDto.class);
 	}
+
 
 
 	

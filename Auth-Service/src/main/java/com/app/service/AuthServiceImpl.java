@@ -1,6 +1,7 @@
 package com.app.service;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -8,21 +9,26 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.app.dto.LoginDto;
 import com.app.dto.LoginRequestDto;
 import com.app.dto.LoginResponseDto;
 import com.app.dto.UserDto;
-import com.app.entity.User;
+import com.app.dto.UserDto2;
+import com.app.feign.UserClinet;
 import com.app.jwt.JwtAuthenticationHelper;
-import com.app.repository.UserRepository;
+
 
 @Service
 public class AuthServiceImpl implements AuthService {
 	
+//	@Autowired
+//	UserRepository urepo;
+	
 	@Autowired
-	UserRepository urepo;
+	UserClinet urepo;
 	
 	@Autowired
 	ModelMapper mapper;
@@ -67,23 +73,48 @@ public class AuthServiceImpl implements AuthService {
 		return response;
 	}
 	
+	@Override
+	public UserDto signup(UserDto2 dto) {
+
+		String userEmail = dto.getEmail();
+//		if (urepo.getuserByEmail(userEmail) == null)
+//		{
+//			throw new RuntimeException("User already Existed");
+//		}
+		
+		BCryptPasswordEncoder bCryptPasswordEncoder= new BCryptPasswordEncoder();
+		String encodedPassword = bCryptPasswordEncoder.encode(dto.getPassword());
+		dto.setPassword(encodedPassword);
+		
+		UserDto response = urepo.createUser(dto);
+		
+//		User u = mapper.map(dto, User.class);
+//		u.setPassword(encodedPassword);
+//		User saveduder = urepo.save(u);
+//		return mapper.map(saveduder, UserDto.class);
+		return response;
+	}
+	
 
 
 	
 	// my method
-	public UserDto validUser(String email ,String password)
-	{
-		User u = urepo.findByEmail(email).get();
-		
-		if(u.getPassword().equals(password))
-		{
-			return mapper.map(u, UserDto.class);
-		}
-		else
-		{
-			throw new IllegalArgumentException("Invalid password.");
-		}
-	}
+//	public UserDto validUser(String email ,String password)
+//	{
+//		User u = urepo.findByEmail(email).get();
+//		
+//		if(u.getPassword().equals(password))
+//		{
+//			return mapper.map(u, UserDto.class);
+//		}
+//		else
+//		{
+//			throw new IllegalArgumentException("Invalid password.");
+//		}
+//	}
+
+
+	
 
 
 	

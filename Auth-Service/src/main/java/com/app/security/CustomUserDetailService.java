@@ -6,21 +6,38 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.app.entity.User;
-import com.app.repository.UserRepository;
+import com.app.dto.UserDto;
+import com.app.feign.UserClinet;
+
 
 @Service
 public class CustomUserDetailService implements UserDetailsService{
 
+//	@Autowired
+//	private UserRepository userrepo;
+	
 	@Autowired
-	private UserRepository userrepo;
+	private UserClinet userrepo;
+	
+	
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
 	{
 
-		User u = userrepo.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username + "Invalid User email !!!!!"));
-		return new MyUserDetails(u);
+	//	User u = userrepo.findByEmail (username).orElseThrow(() -> new UsernameNotFoundException(username + "Invalid User email !!!!!"));
+		
+		if(userrepo.getuserByEmail(username) != null)
+		{
+		  UserDto u = userrepo.getuserByEmail(username);
+		  return new MyUserDetails(u);
+		}
+		else
+		{
+			throw new  UsernameNotFoundException(username + "Invalid User email !!!!!");
+		}
+		
+		
 	}
 	
 	

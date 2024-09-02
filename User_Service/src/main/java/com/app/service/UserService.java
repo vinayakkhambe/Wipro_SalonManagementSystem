@@ -8,7 +8,11 @@ import com.app.entity.User;
 
 public interface UserService {
 	
+	 UserDto validUser(String email ,String password);
+	
 	 UserDto getUserByid(long id);
+	 
+	 UserDto getUserByEmail(String email);
 	 
 	 List<UserDto> getAllUser();
 	 

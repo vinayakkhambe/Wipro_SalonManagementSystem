@@ -7,8 +7,9 @@ import com.app.dto.LoginDto;
 import com.app.dto.LoginRequestDto;
 import com.app.dto.LoginResponseDto;
 import com.app.dto.UserDto;
+import com.app.dto.UserDto2;
 import com.app.service.AuthService;
-import com.app.service.UserService;
+
 
 import jakarta.validation.Valid;
 
@@ -16,9 +17,6 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/auth")
 @CrossOrigin("*")
 public class AuthController {
-	
-	@Autowired
-	UserService uservice;
 	
 	@Autowired
 	AuthService authservice;
@@ -31,18 +29,22 @@ public class AuthController {
 
 	
 	@PostMapping("/signin")
-	public LoginResponseDto login ( @RequestBody LoginRequestDto dto)
+	public LoginResponseDto login (@Valid @RequestBody LoginRequestDto dto)
 	{	
 		return authservice.login(dto);
 	}
 	
-	
-	
-	
-	@PostMapping("/verify")
-	public UserDto validUser(@RequestBody LoginDto dto)
+	@PostMapping("/signup")
+	public UserDto authenticateUser (@Valid @RequestBody UserDto2 dto)
 	{
-		return authservice.validUser(dto.getEmail(), dto.getPassword());
+		return authservice.signup(dto);
 	}
+	
+//	
+//	@PostMapping("/verify")
+//	public UserDto validUser(@RequestBody LoginDto dto)
+//	{
+//		return authservice.validUser(dto.getEmail(), dto.getPassword());
+//	}
 
 }

@@ -1,7 +1,5 @@
 package com.app.dto;
 
-import com.app.entity.Gender;
-import com.app.entity.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

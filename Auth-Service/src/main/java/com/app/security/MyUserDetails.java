@@ -9,15 +9,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.app.entity.User;
+import com.app.dto.UserDto;
+
 
 public class MyUserDetails implements UserDetails {
 	
 	
 	private static final long serialVersionUID = 1L;
-	private User user;
+	private UserDto user;
 	
-	public MyUserDetails(User user) {
+	public MyUserDetails(UserDto user) {
 		super();
 		this.user = user;
 	}

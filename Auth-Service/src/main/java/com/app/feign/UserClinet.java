@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.app.dto.LoginDto;
 import com.app.dto.UserDto;
 import com.app.dto.UserDto2;
 
@@ -20,6 +21,10 @@ public interface UserClinet {
 
 		@PostMapping("api/user/add")
 		public UserDto createUser(@RequestBody UserDto2 dto);
+		
+		@PostMapping("/api/user/verify")
+		public UserDto validUser(@RequestBody LoginDto dto);
+		
 		
 		
 

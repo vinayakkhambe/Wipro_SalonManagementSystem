@@ -29,24 +29,56 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	ModelMapper mapper;
-	
-	public UserDto validUser(String email ,String password)
-	{
-		User u = urepo.findByEmail(email).get();
-		
-//		if(u.getPassword().equals(password))
+//	
+//	public UserDto validUser(String email ,String password)
+//	{
+//		System.out.println(email);
+//		System.out.println(password);
+//		User u = urepo.findByEmail(email)
+//	              .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//  System.out.println("user exist" + u);	
+// 
+//
+//
+//	System.out.println("user pass" + u.getPassword());
+//	System.out.println(passwordEncoder.matches(password, u.getPassword()));
+//		if(passwordEncoder.matches(password, u.getPassword()))
 //		{
 //			return mapper.map(u, UserDto.class);
 //		}
-		if(passwordEncoder.matches(password, u.getPassword()))
-		{
-			return mapper.map(u, UserDto.class);
-		}
-		else
-		{
-			throw new IllegalArgumentException("Invalid password.");
-		}
+//		else
+//		{
+//			throw new IllegalArgumentException("Invalid password.");
+//		}
+//	}
+	
+	public UserDto validUser(String email, String password) {
+	    // Debug statements for tracing (avoid printing sensitive data in production)
+	    System.out.println("Email: " + email);
+	    System.out.println("raw Password: " + password);
+
+	    // Find the user by email
+	    User u = urepo.findByEmail(email)
+	                  .orElseThrow(() -> new RuntimeException("User not found"));
+
+	    // Debug statements for tracing
+	    System.out.println("User exists: " + u);
+	    System.out.println("Stored Password: " + u.getPassword());
+
+	    System.out.println(passwordEncoder.matches(password, u.getPassword())+ "is it match");
+	  
+	    // Verify if the provided password matches the stored password
+	    if (passwordEncoder.matches(password, u.getPassword())) {
+	        // Map and return the user as UserDto
+	        return mapper.map(u, UserDto.class);
+	    } else {
+	        // Throw an exception if the password is invalid
+	        throw new IllegalArgumentException("Invalid password.");
+	    }
 	}
+	
+
 	
 	//GetByID
 	public UserDto getUserByid(long id)
@@ -80,8 +112,8 @@ public class UserServiceImpl implements UserService {
 //		{
 //			return 
 //		}
-		BCryptPasswordEncoder bCryptPasswordEncoder= new BCryptPasswordEncoder();
-		String encodedPassword = bCryptPasswordEncoder.encode(dto.getPassword());
+		
+		String encodedPassword = passwordEncoder.encode(dto.getPassword());
 		User u = mapper.map(dto, User.class);
 		u.setPassword(encodedPassword);
 		User saveduder = urepo.save(u);
@@ -122,6 +154,9 @@ public class UserServiceImpl implements UserService {
 	  urepo.deleteById(id);
 		return mapper.map(u, UserDto.class);
 	}
+
+
+
 
 
 

@@ -27,7 +27,7 @@ public class JwtAuthenticationHelper {
 	
 	private Key key;
 	
-	private String secret = "thisisacodingninjasdemonstrationforsecretkeyinspringsecurityjsonwebtokenauthentication";
+	private String secret = "thisisvinayakkhambedemonstrationforsecretkeyinspringsecurityjsonwebtokenauthentication";
 	private static final long JWT_TOKEN_VALIDITY = 60*60;
 	
 	@PostConstruct

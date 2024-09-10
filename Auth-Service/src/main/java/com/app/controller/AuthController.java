@@ -1,6 +1,7 @@
 package com.app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.app.dto.LoginDto;
@@ -29,13 +30,16 @@ public class AuthController {
 
 	
 	@PostMapping("/signin")
-	public LoginResponseDto login (@Valid @RequestBody LoginRequestDto dto)
+	public LoginResponseDto login ( @RequestBody LoginRequestDto dto)
 	{	
+		System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////////////////");
+		System.out.println(dto);
+
 		return authservice.login(dto);
 	}
 	
 	@PostMapping("/signup")
-	public UserDto authenticateUser (@Valid @RequestBody UserDto2 dto)
+	public UserDto authenticateUser ( @RequestBody UserDto2 dto)
 	{
 		return authservice.signup(dto);
 	}

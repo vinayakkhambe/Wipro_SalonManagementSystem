@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.app.dto.LoginDto;
@@ -42,25 +43,43 @@ public class AuthServiceImpl implements AuthService {
 	@Autowired
 	UserDetailsService userDetailsService;
 	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
+
+	
 	public  void doAuthenticate(String username, String password) 
 	 { 
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
-				password);
-		//Authentication verifiedCredentials;
-		try {
-			 manager.authenticate(authenticationToken);
-
-      		} catch (BadCredentialsException e) 
-		     {
-			    throw new BadCredentialsException("Invalid Username or Password");
-		     }	
+//		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
+//				password);
+//		//Authentication verifiedCredentials;
+//		try {
+//			 manager.authenticate(authenticationToken);
+//
+//      		} catch (BadCredentialsException e) 
+//		     {
+//			    throw new BadCredentialsException("Invalid Username or Password in doaunthenticate");
+//		     }	
+//		
+//		System.out.println("all fine");
 		
-		System.out.println("all fine");
+		LoginDto dto = new LoginDto();
+		dto.setEmail(username);
+		dto.setPassword(password);
+		try{
+			System.out.println("Inside try????????????????????????????????????????????????????????????????//");
+		urepo.validUser( dto);
+		}
+		catch (Exception e) {
+			throw new RuntimeException("Wrong email and password");
+		}
 	  }
 	
 	
+	@Override
 	public LoginResponseDto login(LoginRequestDto jwtRequest) 
 	{		
+		
 		// authenticate with Authentication manager
 		this.doAuthenticate(jwtRequest.getEmail(), jwtRequest.getPassword());
 		
@@ -76,22 +95,17 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public UserDto signup(UserDto2 dto) {
 
-		String userEmail = dto.getEmail();
-//		if (urepo.getuserByEmail(userEmail) == null)
-//		{
-//			throw new RuntimeException("User already Existed");
-//		}
-		
-		BCryptPasswordEncoder bCryptPasswordEncoder= new BCryptPasswordEncoder();
-		String encodedPassword = bCryptPasswordEncoder.encode(dto.getPassword());
-		dto.setPassword(encodedPassword);
+//		UserDto2 d = new UserDto2();
+//		d.setAddress(dto.getAddress());
+//		d.setEmail(dto.getEmail());
+//		d.setGender(dto.getGender());
+//		d.setMobile_no(dto.getMobile_no());
+//		d.setName(dto.getName());
+//		d.setRole_name(dto.getRole_name());
+//		d.setPassword(passwordEncoder.encode(dto.getPassword()));
 		
 		UserDto response = urepo.createUser(dto);
-		
-//		User u = mapper.map(dto, User.class);
-//		u.setPassword(encodedPassword);
-//		User saveduder = urepo.save(u);
-//		return mapper.map(saveduder, UserDto.class);
+
 		return response;
 	}
 	

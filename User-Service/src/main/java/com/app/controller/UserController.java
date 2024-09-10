@@ -42,6 +42,7 @@ public class UserController {
 		return uservice.validUser(dto.getEmail(), dto.getPassword());
 	}
 	
+	
 	@GetMapping("/get/id/{id}")
 //	@PreAuthorize("hasRole('ADMIN')")
 	public UserDto getuserById(@PathVariable long id)

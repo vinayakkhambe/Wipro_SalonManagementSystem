@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LoginRequestDto {
 
-	@NotNull(message = "Enter valid username/email")
+	
 	private String email;	
-	@NotNull(message = "Enter valid password")
+	
 	private String password;
 	
 }	
